@@ -13,7 +13,6 @@ def hw02_1(q1_pdf):
     document = loader.load()
     last = document[-1]
     return last
-    # return str(last.page_content) + str(last.metadata)
 
 
 def hw02_2(q2_pdf):
@@ -22,5 +21,5 @@ def hw02_2(q2_pdf):
 
 if __name__ == "__main__":
     print("============main start============")
-    print("result of hw02_1:\n" + str(hw02_1(q1_pdf)))
+    print("output of hw02_1:\n" + str(hw02_1(q1_pdf)))
     print("============main end==============")
