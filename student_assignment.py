@@ -1,6 +1,7 @@
 from functools import reduce
 
-from langchain_community.document_loaders import PyPDFLoader, PyMuPDFLoader
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_core.documents import Document
 from langchain_text_splitters import (
     CharacterTextSplitter,
     RecursiveCharacterTextSplitter,
@@ -17,10 +18,22 @@ def hw02_1(q1_pdf):
     return last
 
 
+def page_content_merger(pg1: str, pg2: Document):
+    """
+    some page might not have newline on the end which will be very painful when splitting.
+    so just workaround it by appending newline for them.
+    """
+    pg1_missing_newline_on_end = not pg1.endswith("\n")
+    if pg1_missing_newline_on_end:
+        return pg1 + "\n" + pg2.page_content
+    else:
+        return pg1 + pg2.page_content
+
+
 def hw02_2(q2_pdf):
     loader = PyPDFLoader(q2_pdf)
     document = loader.load()
-    full_text = reduce(lambda acc, obj: acc + obj.page_content, document, "")
+    full_text = reduce(page_content_merger, document, "")
     # print(full_text) # WARN: might be too long and be cutoff by the stdout.
     separator_regexs = [
         r"第 \d{1,3}-?\d{0,3} 條\n",
@@ -34,9 +47,9 @@ def hw02_2(q2_pdf):
         keep_separator=True,
     )
     chunks = splitter.split_text(full_text)
-    for chunk in chunks:
-        print("---------------")
-        print(chunk)
+    # for chunk in chunks:
+    #     print("---------------")
+    #     print(chunk)
     return len(chunks)
 
 
