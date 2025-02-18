@@ -22,9 +22,12 @@ def hw02_2(q2_pdf):
     document = loader.load()
     full_text = reduce(lambda acc, obj: acc + obj.page_content, document, "")
     # print(full_text) # WARN: might be too long and be cutoff by the stdout.
-    separator_regex = r"第 \d{1,3}-?\d{0,3} 條"
+    separator_regexs = [
+        r"第 \d{1,3}-?\d{0,3} 條",
+        r"第 [一二三四五六七八九十]{1,2} 章 .*$",
+    ]
     splitter = RecursiveCharacterTextSplitter(
-        separators=[separator_regex],
+        separators=separator_regexs,
         chunk_size=0,
         chunk_overlap=0,
         is_separator_regex=True,
@@ -32,6 +35,7 @@ def hw02_2(q2_pdf):
     )
     text_splitted = splitter.split_text(full_text)
     # for line in text_splitted:
+    #     print("====LINE START====")
     #     print(line + "\n")
     return len(text_splitted)
 
@@ -39,5 +43,5 @@ def hw02_2(q2_pdf):
 if __name__ == "__main__":
     print("============main start============")
     # print("output of hw02_1:\n" + str(hw02_1(q1_pdf)))
-    print("output of hw02_2:\n" + str(hw02_2(q2_pdf)))
+    # print("output of hw02_2:\n" + str(hw02_2(q2_pdf)))
     print("============main end==============")
